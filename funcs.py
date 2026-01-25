@@ -1,6 +1,5 @@
 import time
 
-
 def timeCounter(func):
     def wrap(*args, **kwargs):
         start = time.time()
