@@ -10,6 +10,9 @@ torch = "*"
 torchvision = "*"
 numpy = "*"
 scikit-learn = "*"
+sqlitewrapper = "*"
+fastapi = "*"
+uvicorn = "*"
 
 [dev-packages]
 
