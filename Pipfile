@@ -7,12 +7,12 @@ name = "pypi"
 pandas = "*"
 kagglehub = "*"
 torch = "*"
-torchvision = "*"
 numpy = "*"
 scikit-learn = "*"
-sqlitewrapper = "*"
 fastapi = "*"
 uvicorn = "*"
+sqlalchemy = "*"
+pymongo = "*"
 
 [dev-packages]
 
