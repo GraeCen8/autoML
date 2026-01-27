@@ -5,7 +5,6 @@ name = "pypi"
 
 [packages]
 pandas = "*"
-kagglehub = "*"
 torch = "*"
 numpy = "*"
 scikit-learn = "*"
@@ -13,6 +12,7 @@ fastapi = "*"
 uvicorn = "*"
 sqlalchemy = "*"
 pymongo = "*"
+kagglehub = {extras = ["pandas-datasets"], version = "*"}
 
 [dev-packages]
 
