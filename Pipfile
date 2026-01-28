@@ -13,6 +13,9 @@ uvicorn = "*"
 sqlalchemy = "*"
 pymongo = "*"
 kagglehub = {extras = ["pandas-datasets"], version = "*"}
+xgboost = "*"
+matplotlib = "*"
+seaborn = "*"
 
 [dev-packages]
 
