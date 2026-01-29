@@ -36,6 +36,13 @@ from xgboost import XGBClassifier
 from xgboost import XGBRegressor
 
 
+def split(X, y, val_size=0.2, test_size=0.1, random_state=42):
+    X_temp, X_test, y_temp, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+    val_size_adjusted = val_size / (1 - test_size)
+    X_train, X_val, y_train, y_val = train_test_split(X_temp, y_temp, test_size=val_size_adjusted, random_state=random_state)
+    return X_train, X_val, X_test, y_train, y_val, y_test
+
+
 class ranges: 
     randomForestRange = {
         'n_estimators': [100, 200, 300],
@@ -77,7 +84,7 @@ class Test:
             self.classification = classification
             self.scoreFunc = scoreFunc
             
-            self.update_scoreBoard = lambda model_name, score: self.scoreboard.update({model_name: score})
+            self.update_scoreBoard = lambda model, score: self.scoreboard.update({model: score})
     
     def random_forest_models(self):
             #randomForest
@@ -172,60 +179,90 @@ class Test:
     def run_tests(self, X_train, y_train, X_val, y_val):
             results = []
             for modelFunc in self.models:
-                score = self.experiment(modelFunc, X_train, y_train, X_val, y_val)
-                update_name = modelFunc().__class__.__name__     
-                self.update_scoreBoard(update_name, score) 
-                results.append((update_name, score))
+                score = self.experiment(modelFunc, X_train, y_train, X_val, y_val)   
+                self.update_scoreBoard(modelFunc, score) 
+                results.append((modelFunc, score))
            # return results
-
-    def split(self, X, y, val_size=0.2, test_size=0.1, random_state=42):
-            X_temp, X_test, y_temp, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
-            val_size_adjusted = val_size / (1 - test_size)
-            X_train, X_val, y_train, y_val = train_test_split(X_temp, y_temp, test_size=val_size_adjusted, random_state=random_state)
-            return X_train, X_val, X_test, y_train, y_val, y_test
     
     def get_best_model(self):
             best_model = max(self.scoreboard, key=self.scoreboard.get)
             best_score = self.scoreboard[best_model]
             return best_model, best_score
-        
-    def save_scoreboard(self, filename):
-        pass
+
+    def fullTests(self, X, y, model_filename="best_model.pkl"):
+            X_train, X_val, X_test, y_train, y_val, y_test = split(X, y, val_size=0.2, test_size=0.1, random_state=42)
+            self.add_models()
+            self.run_tests(X_train, y_train, X_val, y_val)
+            best_model, best_score_val = self.get_best_model()
+             
+            print(f"Best Model: {best_model.__class__.__name__}")
+            print(f"Validation Score: {best_score_val}")
+            
+            return best_model, best_model.__class__.__name__, best_score_val, self.scoreboard
+    
+
+class Train(Test):
+    def __init__(self, modelFunc, classification=True, X=None, y=None):
+            super(Train, self).__init__()
+            self.modelFunc = modelFunc
+            self.classification = classification
+            self.X_train, self.X_val, self.X_test, self.y_train, self.y_val, self.y_test = split(X, y, val_size=0.2, test_size=0.1, random_state=42)
+            self.model = None
+    
+    def train_model(self):
+            model = self.modelFunc()
+            model.fit(self.X_train, self.y_train)
+            self.model = model
     
     def save_model(self, model, filename):
             with open (filename, 'wb') as file:
                 pickle.dump(model, file)
 
-    def full(self, X, y, model_filename="best_model.pkl"):
-            X_train, X_val, X_test, y_train, y_val, y_test = self.split(X, y, val_size=0.2, test_size=0.1, random_state=42)
-            self.add_models()
-            self.run_tests(X_train, y_train, X_val, y_val)
-            best_model,  best_score_val = self.get_best_model()
-            test_score = self.scoreFunc(best_model, X_test, y_test)
-             
-            self.save_scoreboard("scoreboard.csv")
-            self.save_model(best_model, "best_model.pkl")
-             
-            print(f"Best Model: {best_model.__class__.__name__}")
-            print(f"Validation Score: {best_score_val}")
-            print(f"Test Score: {test_score}")
-            
+
+class Predict:
+    def __init__(self, model_filename):
+            self.model_filename = model_filename
+            self.model = self.load_model()
     
-            
-            return best_model, best_model.__class__.__name__, best_score_val, test_score, self.scoreboard
+    def load_model(self):
+            with open(self.model_filename, 'rb') as file:
+                model = pickle.load(file)
+            return model
     
+    def predict(self, X):
+            predictions = self.model.predict(X)
+            return predictions
+
 
 
 if __name__ == "__main__": 
-    test1 = Test(classification=True, scoreFunc=sk.metrics.accuracy_score)
+    test = Test(classification=True, scoreFunc=sk.metrics.accuracy_score)
     #example usage with dummy data
     from sklearn.datasets import load_iris
     data = load_iris()
     X = data.data
     y = data.target
-    best_model, best_model_name, best_score_val, test_score, scoreboard = test1.full(X, y)
+    best_modelFunc, best_model_name, best_score_val, scoreboard = test.fullTests(X, y)
     
+    print("finished testing models")
+    
+    trainer = Train(modelFunc=best_modelFunc, classification=True, X=X, y=y)
+    trainer.train_model()
+    trainer.save_model(trainer.model, "best_model.pkl")
+    
+    print("finished training model")
+    
+    predictor = Predict(model_filename="best_model.pkl")
+    predictor_predictions = predictor.predict(trainer.X_test)
+    
+    print("finished predicting")
 
-    test1.save_scoreboard("scoreboard.csv")
-    test1.save_model(best_model, "best_model.pkl")
+    print(f"Best Model: {best_model_name}")
+    print(f"Validation Score: {best_score_val}")
     
+    print("""
+          Testing prediction predictions:
+    """)
+    
+    for x in range(len(predictor_predictions)):
+        print(f"Predicted: {predictor_predictions[x]}, Actual: {trainer.y_test[x]}")
