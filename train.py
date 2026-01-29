@@ -223,7 +223,7 @@ if __name__ == "__main__":
     data = load_iris()
     X = data.data
     y = data.target
-    best_model_name, best_score_val, test_score, scoreboard = test1.full(X, y)
+    best_model, best_model_name, best_score_val, test_score, scoreboard = test1.full(X, y)
     
 
     test1.save_scoreboard("scoreboard.csv")
