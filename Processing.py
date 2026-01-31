@@ -227,7 +227,7 @@ if __name__ == "__main__":
         'scaling_method': 'standard',  # options: 'standard', 'minmax', None 
         'apply_pca': True, 
         'pca_method': 'auto', #options: {'full', 'arpack', 'auto', 'covariance_eigh', 'randomized'}
-        'pca_components': 2, #pca param
+        'pca_components': 5, #pca param
         'text_vectorization': 'tfidf',  # options: 'tfidf', 'count', 'onehot'
         'val_size': 0.2,
         'test_size': 0.1,
