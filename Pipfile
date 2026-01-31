@@ -16,6 +16,7 @@ kagglehub = {extras = ["pandas-datasets"], version = "*"}
 xgboost = "*"
 matplotlib = "*"
 seaborn = "*"
+imblearn = "*"
 
 [dev-packages]
 

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "2ad982c3de60ffc7fb23d42588af0a3c8e09f0aac07bd72665a9237d78444cf4"
+            "sha256": "1440891614630c3af2e16f0cdfe91c6e3a4834d740bd130a133ea9153009038a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -461,6 +461,22 @@
             ],
             "markers": "python_version >= '3.8'",
             "version": "==3.11"
+        },
+        "imbalanced-learn": {
+            "hashes": [
+                "sha256:46eeb5773a96b6fa92426356da66f3e4390a7ed8e715a633c6fb68ee4a3ccdcb",
+                "sha256:fcdff8d27870d6992ea3496230788b97ff98e24302e7f6c598701da525ae440f"
+            ],
+            "markers": "python_version >= '3.10'",
+            "version": "==0.14.1"
+        },
+        "imblearn": {
+            "hashes": [
+                "sha256:d42c2d709d22c00d2b9a91e638d57240a8b79b4014122d92181fcd2549a2f79a",
+                "sha256:d8fbb662919c1b16f438ad91a8256220e53bcf6815c9ad5502c518b798de34f2"
+            ],
+            "index": "pypi",
+            "version": "==0.0"
         },
         "jinja2": {
             "hashes": [
@@ -1614,6 +1630,14 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2'",
             "version": "==1.17.0"
+        },
+        "sklearn-compat": {
+            "hashes": [
+                "sha256:1a0c3a2f384100e034def49ee5a6cfe984a826f79d032eb559f10445e012b02c",
+                "sha256:dddd00c442027b6a2c2fd4a86667b804a7353cdb5093bfd0d5431f5e3c135fce"
+            ],
+            "markers": "python_version >= '3.8'",
+            "version": "==0.1.5"
         },
         "sqlalchemy": {
             "hashes": [
