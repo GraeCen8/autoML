@@ -1,0 +1,13 @@
+pandas = "*"
+torch = "*"
+numpy = "*"
+scikit-learn = "*"
+fastapi = "*"
+uvicorn = "*"
+sqlalchemy = "*"
+pymongo = "*"
+kagglehub = {extras = ["pandas-datasets"], version = "*"}
+xgboost = "*"
+matplotlib = "*"
+seaborn = "*"
+imblearn = "*"
