@@ -219,7 +219,6 @@ class Processing:
 
 
 if __name__ == "__main__": 
-    
     user_params = {
         'target_column': 'target',  # target variable name
         'dropNAMethod': 'drop',  # options: 'mean', 'median', 'mode', 'drop'
@@ -243,10 +242,10 @@ if __name__ == "__main__":
     })
     
     processor = Processing(df, user_params)
-    processed_data = processor.train_processing_pipeline()
+    data = processor.train_processing_pipeline()
     
-    print("Processed Features:\n", processed_data.X)
-    print("\nProcessed Target:\n", processed_data.y)
-    print("\nVectorizers:\n", processed_data.vectorizer)
-    print("\nScaler:\n", processed_data.scaler)
-    print("\nPCA:\n", processed_data.pca)
+    print("Processed Features:\n", data.X)
+    print("\nProcessed Target:\n", data.y)
+    print("\nVectorizers:\n", data.vectorizer)
+    print("\nScaler:\n", data.scaler)
+    print("\nPCA:\n", data.pca)
