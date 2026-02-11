@@ -17,6 +17,7 @@ xgboost = "*"
 matplotlib = "*"
 seaborn = "*"
 imblearn = "*"
+sqlmodel = "*"
 
 [dev-packages]
 
