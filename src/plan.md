@@ -1,7 +1,7 @@
 # the api 
 
 In the api, users need to be able to: 
-- login to their acount
+- login to their account
 - CRUD databases 
 - CRUD experiments 
 - get the best model for each experiment. 
@@ -16,7 +16,7 @@ In the api, users need to be able to:
 - password
 - email
 
-### autoML databases 
+### databases for kaggle like data 
 - id
 - user_id
 - name
