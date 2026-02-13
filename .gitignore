@@ -210,3 +210,6 @@ __marimo__/
 data/
 models/
 logs/
+app.db
+uploads/
+learned_models/
