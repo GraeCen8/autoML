@@ -38,15 +38,17 @@ const Databases = () => {
         formData.append('file', file);
 
         try {
-            await axios.post('http://localhost:8000/database', formData, {
+            const response = await axios.post('http://localhost:8000/database', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
+            console.log('Upload successful:', response.data);
             setName('');
             setFile(null);
             fetchDatabases();
         } catch (err) {
-            console.error(err);
-            alert('Upload failed');
+            console.error('Upload error:', err);
+            const errorMessage = err.response?.data?.detail || err.message || 'Upload failed';
+            alert(`Upload failed: ${errorMessage}`);
         } finally {
             setUploading(false);
         }

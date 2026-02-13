@@ -11,6 +11,9 @@ from database import create_tables, get_session, engine
 from models import User, Database, Experiment, Model, Result
 from worker import run_experiment_task
 
+# Create tables on startup
+create_tables()
+
 app = FastAPI()
 
 # Enable CORS for frontend

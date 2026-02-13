@@ -10,6 +10,8 @@ const Experiments = () => {
     const [databases, setDatabases] = useState([]);
     const [loading, setLoading] = useState(true);
     const [creating, setCreating] = useState(false);
+    const [columns, setColumns] = useState([]);
+    const [loadingColumns, setLoadingColumns] = useState(false);
 
     // Form State
     const [name, setName] = useState('');
@@ -29,9 +31,33 @@ const Experiments = () => {
         try {
             const res = await axios.get(`http://localhost:8000/user/${user.id}/databases`);
             setDatabases(res.data);
-            if (res.data.length > 0) setSelectedDb(res.data[0].id);
+            if (res.data.length > 0) {
+                setSelectedDb(res.data[0].id);
+                loadColumnsForDatabase(res.data[0].id);
+            }
         } catch (err) {
             console.error(err);
+        }
+    };
+
+    const loadColumnsForDatabase = async (dbId) => {
+        try {
+            setLoadingColumns(true);
+            const db = databases.find(d => d.id === dbId);
+            if (!db) return;
+            
+            // Fetch the CSV file and parse columns from header
+            const response = await fetch(db.file_path);
+            const csv = await response.text();
+            const headerLine = csv.split('\n')[0];
+            const cols = headerLine.split(',').map(col => col.trim());
+            setColumns(cols);
+            setTarget(''); // Reset target when changing database
+        } catch (err) {
+            console.error('Error loading columns:', err);
+            setColumns([]);
+        } finally {
+            setLoadingColumns(false);
         }
     };
 
@@ -130,7 +156,12 @@ const Experiments = () => {
                         <label className="text-sm font-medium">Database</label>
                         <select
                             className="w-full px-3 py-2 bg-input border border-border rounded-md"
-                            value={selectedDb} onChange={e => setSelectedDb(e.target.value)} required
+                            value={selectedDb} 
+                            onChange={e => {
+                                setSelectedDb(e.target.value);
+                                loadColumnsForDatabase(parseInt(e.target.value));
+                            }} 
+                            required
                         >
                             <option value="" disabled>Select DB</option>
                             {databases.map(db => <option key={db.id} value={db.id}>{db.name}</option>)}
@@ -138,10 +169,22 @@ const Experiments = () => {
                     </div>
                     <div className="space-y-2">
                         <label className="text-sm font-medium">Target Column</label>
-                        <input
-                            className="w-full px-3 py-2 bg-input border border-border rounded-md"
-                            value={target} onChange={e => setTarget(e.target.value)} required placeholder="e.g. price"
-                        />
+                        {loadingColumns ? (
+                            <div className="w-full px-3 py-2 bg-input border border-border rounded-md text-muted-foreground flex items-center">
+                                <Loader2 className="animate-spin mr-2" size={16} />
+                                Loading columns...
+                            </div>
+                        ) : (
+                            <select
+                                className="w-full px-3 py-2 bg-input border border-border rounded-md"
+                                value={target} 
+                                onChange={e => setTarget(e.target.value)} 
+                                required
+                            >
+                                <option value="" disabled>Select target column</option>
+                                {columns.map(col => <option key={col} value={col}>{col}</option>)}
+                            </select>
+                        )}
                     </div>
                     <button
                         type="submit"

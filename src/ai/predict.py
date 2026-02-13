@@ -4,8 +4,8 @@ import numpy as np
 from sklearn.pipeline import Pipeline
 import sklearn.metrics as metrics
 
-from train import ranges, Test, Train  
-from Processing import Processing
+from .train import ranges, Test, Train  
+from .Processing import Processing
 
 class Experiment:
         def __init__(self, processing_params=None, test_params=None):
